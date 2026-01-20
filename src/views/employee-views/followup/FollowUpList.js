@@ -146,6 +146,7 @@ const AddModal = ({ visible, onClose, onSuccess }) => {
                             className='mb-2'
                             type="datetime-local"
                             name="follow_up_at"
+                            min={new Date().toISOString().slice(0,16)}
                             value={form.follow_up_at}
                             onChange={handleChange}
                             onClick={(e) => {
@@ -269,6 +270,7 @@ const CompleteFollowUpModal = ({ visible, followUpId, onClose, onSuccess }) => {
                             type="datetime-local"
                             className='mb-2'
                             name="next_follow_up"
+                            min={new Date().toISOString().slice(0,16)}
                             value={form.next_follow_up}
                             onChange={(e) => setForm({ ...form, next_follow_up: e.target.value })}
                             onClick={(e) => {

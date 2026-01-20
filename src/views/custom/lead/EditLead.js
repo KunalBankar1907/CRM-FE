@@ -363,6 +363,7 @@ const EditLead = () => {
                                     type="datetime-local"
                                     name="next_follow_up"
                                     value={form.next_follow_up}
+                                    min={new Date().toISOString().slice(0,16)}
                                     onChange={handleChange}
                                     onClick={(e) => e.target.showPicker && e.target.showPicker()}
                                 />

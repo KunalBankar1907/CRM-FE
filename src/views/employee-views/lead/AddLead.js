@@ -351,6 +351,7 @@ const AddLead = () => {
                                 <CFormInput
                                     type="datetime-local"
                                     name="next_follow_up"
+                                    min={new Date().toISOString().slice(0,16)}
                                     value={form.next_follow_up}
                                     onChange={handleChange}
                                     onClick={(e) => {

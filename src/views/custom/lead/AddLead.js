@@ -357,6 +357,7 @@ const AddLead = () => {
                                     name="next_follow_up"
                                     value={form.next_follow_up}
                                     onChange={handleChange}
+                                    min={new Date().toISOString().slice(0,16)}
                                     onClick={(e) => {
                                         if (e.target.showPicker) {
                                             e.target.showPicker();
