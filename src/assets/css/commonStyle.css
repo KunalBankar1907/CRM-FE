@@ -1,0 +1,111 @@
+.sidebar .nav-group{
+    margin-bottom: 0.2rem;
+}
+.sidebar {
+    background: var(--lightColor);
+}
+
+.sidebar-nav .nav-group.show .nav-group-toggle {
+    color: var(--darkColor);
+}
+
+.sidebar-nav .nav-group.show .nav-group-toggle:hover {
+    color: var(--lightColor);
+    background: var(--darkColor);
+}
+
+.sidebar-nav .nav-link .nav-icon {
+    color: var(--darkColor);
+}
+
+.sidebar-nav .nav-link .nav-icon .nav-icon-bullet {
+    background: var(--darkColor);
+}
+
+.sidebar-nav .nav-link {
+    color: var(--darkColor);
+    font-weight: 500;
+}
+
+.sidebar-nav .nav-link:hover {
+    color: var(--lightColor);
+    background: var(--darkColor);
+}
+
+
+
+/* NEW */
+
+/* .sidebar {
+  background: var(--lightColor);
+  padding-top: 1rem;
+  border-right: 1px solid var(--darkBorderColor);
+}
+
+.sidebar .nav-group {
+  margin-bottom: 0.4rem;
+}
+
+.sidebar-nav .nav-group-toggle {
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  padding: 0.5rem 0.75rem;
+}
+
+.sidebar-nav .nav-link {
+  color: var(--darkColor);
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 2px 0;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-nav .nav-link.active {
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+}
+
+.sidebar-nav .nav-link .nav-icon {
+    color: var(--darkColor);
+}
+
+.sidebar-nav .nav-link .nav-icon .nav-icon-bullet {
+    background: var(--darkColor);
+} */
+
+/* Custom Button CSS */
+
+.buttonLabel {
+    color: var(--lightColor);
+    background-color: var(--darkColor);
+    border: 1px solid var(--darkBorderColor);
+    /* border: none; */
+}
+
+.buttonLabel:hover {
+    color: var(--darkColor);
+    background-color: var(--lightColor);
+    border: 1px solid var(--darkBorderColor);
+    /* border: none; */
+}
+
+.buttonLabel-inverse {
+    color: var(--darkColor);
+    background-color: var(--lightColor);
+    /* border: 1px solid var(--darkBorderColor); */
+    border: none;
+}
+
+.buttonLabel-inverse:hover {
+    color: var(--lightColor);
+    background-color: var(--darkColor);
+    border: none;
+}
+.dataTables_length{
+    /* display: none; */
+    margin-bottom: 0.8rem;
+}
