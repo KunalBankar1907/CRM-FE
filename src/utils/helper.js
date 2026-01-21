@@ -2,8 +2,10 @@ import { cilArrowThickFromRight, cilArrowThickRight } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
 export const ROLE = "";
-export const BASE_URL = 'http://localhost:8000/api'
-export const IMAGE_BASE_URL = 'http://localhost:8000'
+// export const BASE_URL = 'http://localhost:8000/api'
+// export const IMAGE_BASE_URL = 'http://localhost:8000'
+export const BASE_URL = 'https://campuskul.org/api'
+export const IMAGE_BASE_URL = 'https://campuskul.org'
 
 export const statusValues = [
   //   { value: '', label: 'Select Status' },

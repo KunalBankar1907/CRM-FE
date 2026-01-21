@@ -11,7 +11,7 @@ const CustomSpinner = () => {
                 minHeight: '200px',
             }}
         >
-            <CSpinner color="primary" />
+            <CSpinner style={{ color: 'var(--darkColor)' }} />
         </div>
     )
 }

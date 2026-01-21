@@ -88,7 +88,6 @@ export const AppSidebarNav = ({ items }) => {
     <style>{`
       .sidebar {
   background: var(--lightColor);
-  padding-top: 1rem;
   border-right: 1px solid var(--darkBorderColor);
 }
 
@@ -106,15 +105,23 @@ export const AppSidebarNav = ({ items }) => {
   color: var(--darkColor);
   font-weight: 500;
   border-radius: 8px;
-  margin: 2px 0;
+  margin: 0.3rem 0;
   padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
   transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.15);
+}
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link .nav-icon:hover {
+  // background: #0c408f;
+  background: var(--darkColor);
+  color: #fff;
 }
 
 .sidebar-nav .nav-link.active {
-  background: #0d6efd;
+  background: var(--darkColor);
   color: #fff;
   font-weight: 600;
 }
