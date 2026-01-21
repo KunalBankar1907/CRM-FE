@@ -94,7 +94,7 @@ const Login = () => {
                 <CCardBody>
                   <CForm onSubmit={handleSubmit}>
                     <div className='mx-auto text-center'>
-                      <CImage src={dummy_logo}></CImage>
+                      <CImage src={dummy_logo} width="100%"></CImage>
                       {/* <h1 className='text-center'>Login</h1> */}
                       <p className="text-body-secondary text-center">Sign In to your account</p>
                     </div>

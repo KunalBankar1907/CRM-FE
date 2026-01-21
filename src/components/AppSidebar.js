@@ -60,36 +60,36 @@ const AppSidebar = () => {
 
   return (
     <>
-    <CSidebar
-      className="border-end"
-      colorScheme="dark"
-      position="fixed"
-      unfoldable={unfoldable}
-      visible={sidebarShow}
-      onVisibleChange={(visible) => {
-        dispatch({ type: 'set', sidebarShow: visible })
-      }}
-    >
-      <CSidebarHeader className="border-bottom" style={{paddingTop:"0",paddingBottom:"0"}}>
-        <CSidebarBrand to="/">
-          {/* <CIcon customClassName="sidebar-brand-full" icon={dummy_logo} height={32} /> */}
-          {/* <CImage src={dummy_logo} height={32} style={{ width: "13rem" }}></CImage> */}
-          <CImage src={logoSrc} height={50} style={{ width: '13rem' }} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
-        </CSidebarBrand>
-        <CCloseButton
-          className="d-lg-none"
-          dark
-          onClick={() => dispatch({ type: 'set', sidebarShow: false })}
-        />
-      </CSidebarHeader>
-      <AppSidebarNav items={navigation} />
-      {/* <CSidebarFooter className="border-top d-none d-lg-flex">
+      <CSidebar
+        className="border-end"
+        colorScheme="dark"
+        position="fixed"
+        unfoldable={unfoldable}
+        visible={sidebarShow}
+        onVisibleChange={(visible) => {
+          dispatch({ type: 'set', sidebarShow: visible })
+        }}
+      >
+        <CSidebarHeader className="border-bottom" style={{ paddingTop: "0", paddingBottom: "0" }}>
+          <CSidebarBrand to="/">
+            {/* <CIcon customClassName="sidebar-brand-full" icon={dummy_logo} height={32} /> */}
+            {/* <CImage src={dummy_logo} height={32} style={{ width: "13rem" }}></CImage> */}
+            <CImage src={logoSrc} height={50} style={{ width: '13rem' }} />
+            <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
+          </CSidebarBrand>
+          <CCloseButton
+            className="d-lg-none"
+            dark
+            onClick={() => dispatch({ type: 'set', sidebarShow: false })}
+          />
+        </CSidebarHeader>
+        <AppSidebarNav items={navigation} />
+        {/* <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
         />
       </CSidebarFooter> */}
-    </CSidebar>
+      </CSidebar >
     </>
   )
 }

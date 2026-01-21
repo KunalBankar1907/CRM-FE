@@ -1,7 +1,14 @@
+// export const colors = {
+//     darkColor: "#2a303d",
+//     lightColor: "#e7efff",
+//     darkBorderColor: "#2a303d73"
+// };
 export const colors = {
-    darkColor: "#2a303d",
+    // darkColor: "#2a303d",
+    darkColor: "#0c408f",
     lightColor: "#e7efff",
-    darkBorderColor: "#2a303d73"
+    // darkBorderColor: "#2a303d73"
+    darkBorderColor: "#0c408f73"
 };
 export const DEFAULT_SEARCHING = false;
 //  DEFAULT_PAGING & DEFAULT_LENGTH_CHANGE are co-related

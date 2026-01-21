@@ -704,7 +704,6 @@ const ListLead = () => {
             <CModal
                 visible={showImportModal}
                 onClose={() => setShowImportModal(false)}
-                size="lg"
             >
                 <CModalHeader>
                     <CModalTitle>Import Leads</CModalTitle>

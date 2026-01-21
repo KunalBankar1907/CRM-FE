@@ -294,25 +294,51 @@ const StageList = () => {
         if (!table) return;
 
         // Initialize DataTable
-        dataTableInstance.current = $(table).DataTable({
-            // paging: false,
+        // dataTableInstance.current = $(table).DataTable({
+        //     // paging: false,
+        //     searching: DEFAULT_SEARCHING,
+        //     paging: DEFAULT_PAGING,
+        //     pageLength: DEFAULT_PAGE_LENGTH,
+        //     lengthChange: DEFAULT_LENGTH_CHANGE,
+        //     lengthMenu: PAGE_LENGTH_MENU
+        // });
+
+        // Attach row-reorder event listener
+        // $(table).on('reorder-handle', async function (e, diff, edit) {
+        //     // diff contains the reordering info
+        //     const reorderedStages = $(table)
+        //         .DataTable()
+        //         .rows()
+        //         .data()
+        //         .toArray();
+
+        //     // Call your API
+        //     await handleStageReorder(reorderedStages);
+        // });
+        // return () => {
+        //     try {
+        //         // Destroy only if table is still in the DOM
+        //         if (dataTableInstance.current) {
+        //             dataTableInstance.current.destroy(true);
+        //             dataTableInstance.current = null;
+        //         }
+        //     } catch (err) {
+        //         console.warn('DataTable destroy failed:', err);
+        //     }
+        // }
+
+        const cleanup = initDataTable(tableRef, {
             searching: DEFAULT_SEARCHING,
             paging: DEFAULT_PAGING,
             pageLength: DEFAULT_PAGE_LENGTH,
             lengthChange: DEFAULT_LENGTH_CHANGE,
-            lengthMenu: PAGE_LENGTH_MENU
-        });
+            lengthMenu: PAGE_LENGTH_MENU,
+            ordering: true,
+            onRowReorder: handleStageReorder,
+        }, true);
         return () => {
-            try {
-                // Destroy only if table is still in the DOM
-                if (dataTableInstance.current) {
-                    dataTableInstance.current.destroy(true);
-                    dataTableInstance.current = null;
-                }
-            } catch (err) {
-                console.warn('DataTable destroy failed:', err);
-            }
-        }
+            cleanup?.();
+        };
     }, [stages, loading]);
 
     const handleDelete = async (id) => {
@@ -375,7 +401,7 @@ const StageList = () => {
                                     {stages.length ? (
                                         stages.map((stage) => (
                                             <tr key={stage.id}>
-                                                <td className="reorder-handle text-center">
+                                                <td className="reorder-handle row-reorder text-center">
                                                     <CIcon icon={cilMenu} style={{ cursor: 'grab' }} />
                                                 </td>
                                                 <td>{stage.id}</td>

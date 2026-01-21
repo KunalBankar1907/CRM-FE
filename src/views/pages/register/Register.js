@@ -186,7 +186,7 @@ const Register = () => {
                 <CCardBody>
                   <div className='mx-auto text-center'>
                     {/* <h1 className="text-center">Register</h1> */}
-                    <CImage src={dummy_logo}></CImage>
+                    <CImage src={dummy_logo} width="100%"></CImage>
                     <p className="text-body-secondary text-center">
                       Create your organization and admin account
                     </p>
