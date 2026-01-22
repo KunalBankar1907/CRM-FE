@@ -237,7 +237,13 @@ const Organization = () => {
                                                 src={previewLogo.startsWith('blob:') ? previewLogo : `${IMAGE_BASE_URL}/uploads/${previewLogo}`}
                                                 height={90}
                                                 rounded
-                                                style={{ objectFit: 'cover', border: '1px solid' }}
+                                                // style={{ objectFit: 'cover', border: '1px solid' }}
+                                                style={{
+                                                    maxWidth: '100%',
+                                                    height: 'auto',
+                                                    objectFit: 'cover',
+                                                    border: '1px solid',
+                                                }}
                                             />
                                         </div>
                                     )}
