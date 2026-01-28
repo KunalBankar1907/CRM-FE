@@ -599,7 +599,7 @@ const FollowUpList = () => {
         <div className="p-0">
             <CCard>
                 <ListHeader
-                    title="Follow-Up"
+                    // title="Follow-Up"
                     layout="two-rows"
                     addButtonLabel="Add Follow-Up"
                     onAddClick={() => setShowAddModal(true)}

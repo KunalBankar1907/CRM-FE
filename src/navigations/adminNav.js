@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import { cilSpeedometer, cilDrop, cilPencil, cilDescription, cilUser, cibLibreoffice, cilPuzzle, cilUserFollow, cilTransfer, cilTask } from '@coreui/icons'
+import { cilSpeedometer, cilDrop, cilPencil, cilDescription, cilUser, cibLibreoffice, cilPuzzle, cilUserFollow, cilTransfer, cilTask, cilEnvelopeOpen } from '@coreui/icons'
 
 const adminNav = [
     {
@@ -74,6 +74,12 @@ const adminNav = [
         to: '/owner/follow-up/list',
         icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
     },
+    // {
+    //     component: CNavItem,
+    //     name: 'Enquiries',
+    //     to: '/owner/enquiry/list',
+    //     icon: <CIcon icon={cilEnvelopeOpen} customClassName="nav-icon" />,
+    // },
     // {
     //     component: CNavGroup,
     //     name: 'Pipeline Stage',

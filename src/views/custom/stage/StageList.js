@@ -372,7 +372,7 @@ const StageList = () => {
         <div className="p-0">
             <CCard>
                 <ListHeader
-                    title="Stages"
+                    // title="Stages"
                     addButtonLabel="Add Stage"
                     onAddClick={() => setShowAddModal(true)}
                     searchValue={searchTerm}
@@ -425,9 +425,9 @@ const StageList = () => {
                                                     {/* <span className="ms-2">{capitalizeWord(stage.stage_status)}</span> */}
                                                 </td>
 
-                                                <td className="text-center">
+                                                <td className="text-center table-actions">
                                                     <span
-                                                        className="badge bg-dark me-2"
+                                                        className="action-btn edit me-2"
                                                         style={{ cursor: 'pointer' }}
                                                         onClick={() => {
                                                             setEditStageId(stage.id)
@@ -437,7 +437,7 @@ const StageList = () => {
                                                         <CIcon icon={cilPencil} />
                                                     </span>
                                                     <span
-                                                        className="badge bg-danger"
+                                                        className="action-btn delete"
                                                         style={{ cursor: 'pointer' }}
                                                         onClick={() => handleDelete(stage.id)}
                                                     >

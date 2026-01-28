@@ -504,7 +504,7 @@ const ListLead = () => {
                                                 <tr key={lead.id}>
                                                     {/* <td>{lead.id}</td> */}
                                                     <td>{i + 1}</td>
-                                                    <td onClick={() => navigate(`/owner/lead/view/${lead.id}`)} style={{ cursor: "pointer" }}>{lead.lead_name}</td>
+                                                    <td onClick={() => navigate(`/owner/lead/view/${lead.id}`)} style={{ cursor: "pointer" }}><span style={{ fontWeight: "700" }}>{lead.lead_name}</span></td>
                                                     <td>{lead.phone_number}</td>
                                                     <td>{lead.email}</td>
                                                     <td>{lead.company_name}</td>
@@ -528,9 +528,9 @@ const ListLead = () => {
                                                     <td>{lead.priority}</td>
                                                     <td>{formatDateDDMMYYYY(lead.next_follow_up)}</td>
                                                     <td>
-                                                        <div className="d-flex gap-2 justify-content-center">
+                                                        <div className="table-actions d-flex gap-2 justify-content-center">
                                                             <span
-                                                                className="badge bg-dark"
+                                                                className="action-btn edit"
                                                                 style={{ cursor: 'pointer', paddingTop: "0.375rem", paddingBottom: "0.375rem" }}
                                                                 onClick={() => navigate(`/owner/lead/edit/${lead.id}`)}
                                                                 title={`Edit Lead: ${lead.lead_name}`}
@@ -538,7 +538,7 @@ const ListLead = () => {
                                                                 <CIcon icon={cilPencil} />
                                                             </span>
                                                             <span
-                                                                className="badge bg-danger"
+                                                                className="action-btn delete"
                                                                 style={{ cursor: 'pointer', paddingTop: "0.375rem", paddingBottom: "0.375rem" }}
                                                                 onClick={() => handleDeleteLead(lead.id)}
                                                                 title={`Delete Lead: ${lead.lead_name}`}
@@ -546,7 +546,7 @@ const ListLead = () => {
                                                                 <CIcon icon={cilTrash} />
                                                             </span>
                                                             <span
-                                                                className="badge bg-info"
+                                                                className="action-btn view"
                                                                 style={{ cursor: 'pointer', paddingTop: "0.375rem", paddingBottom: "0.375rem" }}
                                                                 onClick={() => navigate(`/owner/lead/view/${lead.id}`)}
                                                                 title={`View Lead: ${lead.lead_name}`}
@@ -640,10 +640,10 @@ const ListLead = () => {
                                                                     <div>Next Follow-Up: {formatDateDDMMYYYY(lead.next_follow_up) || '-'}</div>
                                                                 }
                                                             </div>
-                                                            <div className="d-flex justify-content-end gap-2 mt-2">
+                                                            <div className="table-actions d-flex justify-content-end gap-2 mt-2">
                                                                 <CButton
                                                                     size="sm"
-                                                                    className="buttonLabel"
+                                                                    className="action-btn edit"
                                                                     title={`Edit Lead: ${lead.lead_name}`}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation()
@@ -654,7 +654,7 @@ const ListLead = () => {
                                                                 </CButton>
                                                                 <CButton
                                                                     size="sm"
-                                                                    color="danger"
+                                                                    className='action-btn delete'
                                                                     title={`Delete Lead: ${lead.lead_name}`}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation()

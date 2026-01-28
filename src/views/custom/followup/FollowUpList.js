@@ -226,7 +226,7 @@ const AddModal = ({ visible, onClose, onSuccess }) => {
                             className='mb-2'
                             type="datetime-local"
                             name="follow_up_at"
-                            min={new Date().toISOString().slice(0,16)}
+                            min={new Date().toISOString().slice(0, 16)}
                             value={form.follow_up_at}
                             onChange={handleChange}
                             onClick={(e) => {
@@ -350,7 +350,7 @@ const CompleteFollowUpModal = ({ visible, followUpId, onClose, onSuccess }) => {
                             type="datetime-local"
                             className='mb-2'
                             name="next_follow_up"
-                            min={new Date().toISOString().slice(0,16)}
+                            min={new Date().toISOString().slice(0, 16)}
                             value={form.next_follow_up}
                             onChange={(e) => setForm({ ...form, next_follow_up: e.target.value })}
                             onClick={(e) => {
@@ -512,71 +512,154 @@ const ViewFollowUpModal = ({ visible, followUpId, onClose }) => {
     }
 
     return (
-        <CModal visible={visible} onClose={onClose} backdrop="static" size="lg">
-            <CModalHeader>
-                <CModalTitle>View Follow-up Details</CModalTitle>
-            </CModalHeader>
+        <>
+            <CModal visible={visible} onClose={onClose} backdrop="static" size="lg" className="view-modal">
+                <CModalHeader className="view-modal-header">
+                    <CModalTitle>View Follow-up Details</CModalTitle>
+                </CModalHeader>
 
-            <CModalBody>
-                {loading ? (
-                    <div className="text-center">Loading...</div>
-                ) : followUp ? (
-                    <CForm>
-                        <div className="mb-2">
-                            <CFormLabel>Lead Name</CFormLabel>
-                            <CFormInput value={followUp.lead?.lead_name || '-'} readOnly />
-                        </div>
-
-                        <div className="mb-2">
-                            <CFormLabel>Follow-up Date</CFormLabel>
-                            <CFormInput value={formatDateDDMMYYYY(followUp.follow_up_at) || '-'} readOnly />
-                        </div>
-
-                        <div className="mb-2">
-                            <CFormLabel>Status</CFormLabel>
-                            <CBadge
-                                className="mx-2 py-1 px-2 text-white"
-                                style={{
-                                    backgroundColor: followupStatusColorMap[followUp.status] || '#6c757d',
-                                    fontSize: '0.875rem',
-                                }}
-                            >
-                                {followUp.status}
-                            </CBadge>
-                        </div>
-
-                        {followUp.outcome &&
+                <CModalBody className="view-modal-body">
+                    {loading ? (
+                        <div className="text-center">Loading...</div>
+                    ) : followUp ? (
+                        <CForm>
                             <div className="mb-2">
-                                <CFormLabel>Outcome</CFormLabel>
-                                <CFormInput value={followUp.outcome || '-'} readOnly />
+                                <CFormLabel>Lead Name</CFormLabel>
+                                <CFormInput value={followUp.lead?.lead_name || '-'} readOnly className="readonly-input" />
                             </div>
-                        }
 
-                        {followUp.next_follow_up_note &&
                             <div className="mb-2">
-                                <CFormLabel>Completion Note</CFormLabel>
-                                <CFormTextarea value={followUp.next_follow_up_note || '-'} readOnly />
+                                <CFormLabel>Follow-up Date</CFormLabel>
+                                <CFormInput value={formatDateDDMMYYYY(followUp.follow_up_at) || '-'} readOnly className="readonly-input" />
                             </div>
-                        }
 
-                        {followUp.next_follow_up && (
                             <div className="mb-2">
-                                <CFormLabel>Next Follow-up Date</CFormLabel>
-                                <CFormInput value={formatDateDDMMYYYY(followUp.next_follow_up)} readOnly />
+                                <CFormLabel>Status</CFormLabel>
+                                <CBadge
+                                    className="mx-2 py-1 px-2 text-white status-badge"
+                                    style={{
+                                        backgroundColor: followupStatusColorMap[followUp.status] || '#6c757d',
+                                        fontSize: '0.875rem',
+                                    }}
+                                >
+                                    {followUp.status}
+                                </CBadge>
                             </div>
-                        )}
-                    </CForm>
-                ) : (
-                    <div className="text-center text-muted">No details available</div>
-                )}
-            </CModalBody>
 
-            <CModalFooter>
-                <CButton className="buttonLabel-inverse" onClick={onClose}>
-                    Close
-                </CButton>
-            </CModalFooter>
-        </CModal>
+                            {followUp.outcome &&
+                                <div className="mb-2">
+                                    <CFormLabel>Outcome</CFormLabel>
+                                    <CFormInput value={followUp.outcome || '-'} readOnly className="readonly-input" />
+                                </div>
+                            }
+
+                            {followUp.next_follow_up_note &&
+                                <div className="mb-2">
+                                    <CFormLabel>Completion Note</CFormLabel>
+                                    <CFormTextarea value={followUp.next_follow_up_note || '-'} readOnly className="readonly-input textarea-box" />
+                                </div>
+                            }
+
+                            {followUp.next_follow_up && (
+                                <div className="mb-2">
+                                    <CFormLabel>Next Follow-up Date</CFormLabel>
+                                    <CFormInput value={formatDateDDMMYYYY(followUp.next_follow_up)} readOnly className="readonly-input" />
+                                </div>
+                            )}
+                        </CForm>
+                    ) : (
+                        <div className="text-center text-muted">No details available</div>
+                    )}
+                </CModalBody>
+
+                <CModalFooter className="view-modal-footer">
+                    <CButton className="buttonLabel" onClick={onClose}>
+                        Close
+                    </CButton>
+                </CModalFooter>
+            </CModal>
+            <style>{`
+            /* Modal wrapper */
+            .view-modal .modal-content {
+            border-radius: 14px;
+            border: 1px solid var(--darkBorderColor);
+            background: #fff;
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.12),
+                0 20px 60px rgba(0,0,0,0.18);
+            }
+
+            /* Header */
+            .view-modal-header {
+            background: var(--lightColor);
+            border-bottom: 1px solid var(--darkBorderColor);
+            padding: 1rem 1.25rem;
+            position: relative;
+            }
+
+            .view-modal-header .modal-title {
+            color: var(--darkColor);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            }
+
+            /* Optional left accent like sidebar */
+            .view-modal-header::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 20%;
+            width: 4px;
+            height: 60%;
+            background: var(--darkColor);
+            border-radius: 0 4px 4px 0;
+            }
+
+            /* Body */
+            .view-modal-body {
+            padding: 1.25rem;
+            }
+
+            .readonly-input {
+            background: var(--lightColor);
+            border: 1px solid var(--darkBorderColor);
+            border-radius: 8px;
+            color: var(--darkColor);
+            font-weight: 500;
+            padding: 0.5rem 0.65rem;
+            box-shadow:
+                inset 0 1px 2px rgba(255, 255, 255, 0.6),
+                0 1px 2px rgba(0,0,0,0.05);
+            }
+
+            .textarea-box {
+            min-height: 80px;
+            line-height: 1.5;
+            }
+
+            .status-badge {
+            border-radius: 6px;
+            font-weight: 500;
+            }
+
+            /* Footer */
+            .view-modal-footer {
+            border-top: 1px solid var(--darkBorderColor);
+            background: #fafbff;
+            }
+
+            .view-modal-footer .buttonLabel {
+            background: var(--darkColor);
+            border-color: var(--darkColor);
+            color: #fff;
+            }
+
+            .view-modal-footer .buttonLabel:hover {
+            background: #072c63;
+            border-color: #072c63;
+            }
+        `}</style>
+        </>
     )
 }
 // FOLLOW-UP LIST 
@@ -675,76 +758,77 @@ const FollowUpList = () => {
     }, [followUps, loading]);
 
     return (
-        <div className="p-0">
-            <CCard>
-                <ListHeader
-                    title="Follow-Up"
-                    layout="two-rows"
-                    addButtonLabel="Add Follow-Up"
-                    onAddClick={() => setShowAddModal(true)}
-                    searchValue={searchTerm}
-                    onSearchChange={(e) => {
-                        setSearchTerm(e.target.value)
-                        setPage(1)
-                    }}
-                    filterComponents={[
-                        <select
-                            key="followup"
-                            className="form-select"
-                            value={followUpFilter}
-                            onChange={(e) => {
-                                setFollowUpFilter(e.target.value)
-                                setPage(1)
-                            }}
-                        >
-                            <option value="">All Follow-Ups</option>
-                            <option value="Overdue">Overdue</option>
-                            <option value="Today">Today</option>
-                            <option value="Upcoming">Upcoming</option>
-                        </select>,
-                    ]}
-                />
-                {loading ? (
-                    <CustomSpinner />
-                ) : (
-                    <CCardBody className="pt-0">
-                        <div className="table-responsive rounded bg-white">
-                            <table ref={tableRef} className="table table-bordered table-striped table-hover align-middle mb-0">
-                                <thead className="table-primary">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Lead Name</th>
-                                        <th>Follow-up At</th>
-                                        <th>Status</th>
-                                        {/* <th>Outcome</th> */}
-                                        <th className="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {followUps.length ? (
-                                        followUps.map((f, i) => (
-                                            <tr key={f.id}>
-                                                {/* <td>{f.id}</td> */}
-                                                <td>{i + 1}</td>
-                                                <td>{f.lead?.lead_name ?? '-'}</td>
-                                                <td>{formatDateDDMMYYYY(f.follow_up_at)}</td>
-                                                {/* <td>{f.status}</td> */}
-                                                <td>
-                                                    <CBadge
-                                                        className="py-1 px-2 text-white"
-                                                        style={{
-                                                            backgroundColor: followupStatusColorMap[f.status] || '#6c757d',
-                                                            fontSize: '0.875rem',
-                                                            minHeight: '32px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        {capitalizeWord(f.status)}
-                                                    </CBadge>
-                                                </td>
-                                                {/* <td>
+        <>
+            <div className="p-0">
+                <CCard>
+                    <ListHeader
+                        // title="Follow-Up"
+                        layout="two-rows"
+                        addButtonLabel="Add Follow-Up"
+                        onAddClick={() => setShowAddModal(true)}
+                        searchValue={searchTerm}
+                        onSearchChange={(e) => {
+                            setSearchTerm(e.target.value)
+                            setPage(1)
+                        }}
+                        filterComponents={[
+                            <select
+                                key="followup"
+                                className="form-select"
+                                value={followUpFilter}
+                                onChange={(e) => {
+                                    setFollowUpFilter(e.target.value)
+                                    setPage(1)
+                                }}
+                            >
+                                <option value="">All Follow-Ups</option>
+                                <option value="Overdue">Overdue</option>
+                                <option value="Today">Today</option>
+                                <option value="Upcoming">Upcoming</option>
+                            </select>,
+                        ]}
+                    />
+                    {loading ? (
+                        <CustomSpinner />
+                    ) : (
+                        <CCardBody className="pt-0">
+                            <div className="table-responsive rounded bg-white">
+                                <table ref={tableRef} className="table table-bordered table-striped table-hover align-middle mb-0">
+                                    <thead className="table-primary">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Lead Name</th>
+                                            <th>Follow-up At</th>
+                                            <th>Status</th>
+                                            {/* <th>Outcome</th> */}
+                                            <th className="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {followUps.length ? (
+                                            followUps.map((f, i) => (
+                                                <tr key={f.id}>
+                                                    {/* <td>{f.id}</td> */}
+                                                    <td>{i + 1}</td>
+                                                    <td>{f.lead?.lead_name ?? '-'}</td>
+                                                    <td>{formatDateDDMMYYYY(f.follow_up_at)}</td>
+                                                    {/* <td>{f.status}</td> */}
+                                                    <td>
+                                                        <CBadge
+                                                            className="py-1 px-2 text-white"
+                                                            style={{
+                                                                backgroundColor: followupStatusColorMap[f.status] || '#6c757d',
+                                                                fontSize: '0.875rem',
+                                                                minHeight: '32px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            {capitalizeWord(f.status)}
+                                                        </CBadge>
+                                                    </td>
+                                                    {/* <td>
                                                     <CButton
                                                         size="sm"
                                                         color="success"
@@ -753,34 +837,34 @@ const FollowUpList = () => {
                                                         Mark Done
                                                     </CButton>
                                                 </td> */}
-                                                {/* <td>{f.outcome ?? '-'}</td> */}
-                                                {/* <td>
+                                                    {/* <td>{f.outcome ?? '-'}</td> */}
+                                                    {/* <td>
                                                     <span className="badge bg-success">
                                                         {capitalizeWord(f.stage_status || 'active')}
                                                     </span>
                                                 </td> */}
 
 
-                                                <td className="text-center">
-                                                    <span
-                                                        className={`badge ${f.status === 'Done' ? 'bg-secondary' : 'bg-success'} me-2`}
-                                                        style={{ padding: '0.35em 0.75em', cursor: f.status === 'Done' ? 'not-allowed' : 'pointer' }}
-                                                        onClick={() => f.status !== 'Done' && setCompleteModal({ open: true, id: f.id })}
-                                                        title="Mark as Done"
-                                                    >
-                                                        <CIcon icon={cilTask} />
-                                                    </span>
-                                                    {f.status === 'Done' && (
+                                                    <td className="text-center">
                                                         <span
-                                                            className={`badge bg-info me-2`}
-                                                            style={{ padding: '0.35em 0.75em', cursor: 'pointer' }}
-                                                            onClick={() => setViewModal({ open: true, id: f.id })}
-                                                            title="View Follow-up Details"
+                                                            className={`badge ${f.status === 'Done' ? 'bg-secondary' : 'bg-success'} me-2`}
+                                                            style={{ padding: '0.35em 0.75em', cursor: f.status === 'Done' ? 'not-allowed' : 'pointer' }}
+                                                            onClick={() => f.status !== 'Done' && setCompleteModal({ open: true, id: f.id })}
+                                                            title="Mark as Done"
                                                         >
-                                                            <CIcon icon={cilOpentype} />
+                                                            <CIcon icon={cilTask} />
                                                         </span>
-                                                    )}
-                                                    {/* <span
+                                                        {f.status === 'Done' && (
+                                                            <span
+                                                                className={`badge bg-info me-2`}
+                                                                style={{ padding: '0.35em 0.75em', cursor: 'pointer' }}
+                                                                onClick={() => setViewModal({ open: true, id: f.id })}
+                                                                title="View Follow-up Details"
+                                                            >
+                                                                <CIcon icon={cilOpentype} />
+                                                            </span>
+                                                        )}
+                                                        {/* <span
                                                         className="badge bg-dark me-2"
                                                         style={{ padding: '0.35em 0.75em', cursor: 'pointer' }}
                                                     // onClick={() => {
@@ -790,66 +874,67 @@ const FollowUpList = () => {
                                                     >
                                                         <CIcon icon={cilPencil} />
                                                     </span> */}
-                                                    {/* <span
+                                                        {/* <span
                                                         className="badge bg-danger"
                                                         style={{ padding: '0.35em 0.75em', cursor: 'pointer' }}
                                                     // onClick={() => handleDelete(f.id)}
                                                     >
                                                         <CIcon icon={cilTrash} />
                                                     </span> */}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="6" className="text-center text-muted">
+                                                    No follow-ups found
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="6" className="text-center text-muted">
-                                                No follow-ups found
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </CCardBody>
-                )}
-            </CCard>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CCardBody>
+                    )}
+                </CCard>
 
-            {/* ADD MODAL */}
-            <AddModal
-                visible={showAddModal}
-                onClose={() => setShowAddModal(false)}
-                onSuccess={() => {
-                    setShowAddModal(false)
-                    fetchFollowUps()
-                }}
-            />
+                {/* ADD MODAL */}
+                <AddModal
+                    visible={showAddModal}
+                    onClose={() => setShowAddModal(false)}
+                    onSuccess={() => {
+                        setShowAddModal(false)
+                        fetchFollowUps()
+                    }}
+                />
 
-            {/* EDIT MODAL */}
-            <EditModal
-                visible={showEditModal}
-                followupId={editFollowupId}
-                onClose={() => setShowEditModal(false)}
-                onSuccess={fetchFollowUps}
-            />
+                {/* EDIT MODAL */}
+                <EditModal
+                    visible={showEditModal}
+                    followupId={editFollowupId}
+                    onClose={() => setShowEditModal(false)}
+                    onSuccess={fetchFollowUps}
+                />
 
-            {/* COMPLETE MODAL */}
-            <CompleteFollowUpModal
-                visible={!!completeModal}
-                followUpId={completeModal ? completeModal.id : completeModal}
-                onClose={() => setCompleteModal(null)}
-                onSuccess={fetchFollowUps}
-            />
+                {/* COMPLETE MODAL */}
+                <CompleteFollowUpModal
+                    visible={!!completeModal}
+                    followUpId={completeModal ? completeModal.id : completeModal}
+                    onClose={() => setCompleteModal(null)}
+                    onSuccess={fetchFollowUps}
+                />
 
-            {/* VIEW MODAL */}
-            <ViewFollowUpModal
-                visible={viewModal.open}
-                followUpId={viewModal.id}
-                onClose={() => setViewModal({ open: false, id: null })}
-            />
+                {/* VIEW MODAL */}
+                <ViewFollowUpModal
+                    visible={viewModal.open}
+                    followUpId={viewModal.id}
+                    onClose={() => setViewModal({ open: false, id: null })}
+                />
 
 
 
-        </div>
+            </div>
+        </>
     )
 }
 

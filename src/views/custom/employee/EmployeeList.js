@@ -215,7 +215,7 @@ const EmployeeList = () => {
                                                 <td>{emp.phone_number}</td>
                                                 <td>
                                                     <span
-                                                        className={`badge text-white ${emp.status.toLowerCase() === 'active' ? 'bg-success' : 'bg-danger'}`}
+                                                        className={`badge  ${emp.status.toLowerCase() === 'active' ? 'bg-success' : 'bg-danger'}`}
                                                         style={{ padding: '0.35em 0.75em', cursor: 'pointer' }}
                                                         onClick={() => handleStatusChange(emp.id)}
                                                     >
@@ -223,16 +223,16 @@ const EmployeeList = () => {
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div className="d-flex gap-2 justify-content-center flex-row">
+                                                    <div className="table-actions d-flex gap-2 justify-content-center flex-row">
                                                         <span
-                                                            className="badge bg-dark"
+                                                            className=" action-btn edit"
                                                             style={{ cursor: 'pointer' }}
                                                             onClick={() => handleEdit(emp.id)}
                                                         >
                                                             <CIcon icon={cilPencil} />
                                                         </span>
                                                         <span
-                                                            className="badge bg-danger"
+                                                            className=" action-btn delete"
                                                             style={{ cursor: 'pointer' }}
                                                             onClick={() => handleDelete(emp.id)}
                                                         >

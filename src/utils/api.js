@@ -257,6 +257,23 @@ export const importLeads = (data) => {
     });
 };
 
+export const getAllEnquiries = ({ search = '', status = '', page = 1, perPage = 10 } = {}) => {
+    return api.get('/admin/enquiry/get-all', {
+        params: {
+            search,
+            page,
+            status,
+            per_page: perPage,
+        },
+    })
+};
 
+export const deleteEnquiry = (id) => {
+    return api.post(`/admin/enquiry/delete/${id}`);
+};
+
+export const getEnquiryById = (id) => {
+    return api.get(`/admin/enquiry/${id}`);
+}
 // You can add more API calls here...
 

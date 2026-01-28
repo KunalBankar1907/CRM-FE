@@ -302,9 +302,9 @@ const ListLead = () => {
                                                     <td>{lead.priority}</td>
                                                     <td>{formatDateDDMMYYYY(lead.next_follow_up)}</td>
                                                     <td>
-                                                        <div className="d-flex gap-2 justify-content-center">
+                                                        <div className="table-actions d-flex gap-2 justify-content-center">
                                                             <span
-                                                                className="badge bg-dark"
+                                                                className="action-btn edit"
                                                                 style={{ cursor: 'pointer', paddingTop: "0.375rem", paddingBottom: "0.375rem" }}
                                                                 onClick={() => navigate(`/employee/lead/edit/${lead.id}`)}
                                                                 title={`Edit Lead: ${lead.lead_name}`}
@@ -312,7 +312,7 @@ const ListLead = () => {
                                                                 <CIcon icon={cilPencil} />
                                                             </span>
                                                             <span
-                                                                className="badge bg-info"
+                                                                className="action-btn view"
                                                                 style={{ cursor: 'pointer', paddingTop: "0.375rem", paddingBottom: "0.375rem" }}
                                                                 onClick={() => navigate(`/employee/lead/view/${lead.id}`)}
                                                                 title={`View Lead: ${lead.lead_name}`}
@@ -407,10 +407,10 @@ const ListLead = () => {
                                                                     <div>Next Follow-Up: {formatDateDDMMYYYY(lead.next_follow_up) || '-'}</div>
                                                                 }
                                                             </div>
-                                                            <div className="d-flex justify-content-end gap-2 mt-2">
+                                                            <div className="table-actions d-flex justify-content-end gap-2 mt-2">
                                                                 <CButton
                                                                     size="sm"
-                                                                    className="buttonLabel"
+                                                                    className="action-btn edit"
                                                                     title={`Edit Lead: ${lead.lead_name}`}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation()

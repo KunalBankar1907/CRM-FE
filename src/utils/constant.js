@@ -4,11 +4,9 @@
 //     darkBorderColor: "#2a303d73"
 // };
 export const colors = {
-    // darkColor: "#2a303d",
-    darkColor: "#0c408f",
-    lightColor: "#e7efff",
-    // darkBorderColor: "#2a303d73"
-    darkBorderColor: "#0c408f73"
+    darkColor: "#0B3A82",
+    lightColor: "#eef3fd",
+    darkBorderColor: "rgba(11, 58, 130, 0.18)"
 };
 export const DEFAULT_SEARCHING = false;
 //  DEFAULT_PAGING & DEFAULT_LENGTH_CHANGE are co-related

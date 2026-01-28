@@ -42,6 +42,9 @@ const UpdateStage = React.lazy(
 const FollowUpList = React.lazy(
   () => import('../views/custom/followup/FollowUpList')
 );
+const EnquiryList = React.lazy(
+  () => import('../views/custom/enquiry/EnquiryList')
+);
 const ownerRoutes = [
   {
     path: 'dashboard',
@@ -99,6 +102,10 @@ const ownerRoutes = [
   {
     path: 'follow-up/list',
     element: FollowUpList,
+  },
+  {
+    path: 'enquiry/list',
+    element: EnquiryList,
   },
 ]
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { CButton, CCard } from '@coreui/react'
 
 const ListHeader = ({
-    title = 'List',
+    title = '',
     layout = 'single-row', // 'single-row' | 'two-rows'
     onAddClick,
     addButtonLabel = 'Add',
@@ -17,6 +17,13 @@ const ListHeader = ({
 
                 {/* ROW 1 */}
                 <div className="list-header-top">
+                    {title && (
+                        <div className="list-title">
+                            <h5 className="mb-0">{title}</h5>
+                        </div>
+                    )}
+
+
                     <div className="action-buttons">
                         {onAddClick && (
                             <CButton size="sm" className="buttonLabel" onClick={onAddClick}>
