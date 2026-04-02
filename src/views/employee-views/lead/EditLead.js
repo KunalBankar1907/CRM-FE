@@ -17,20 +17,28 @@ import {
     CFormTextarea,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilUser, cilPhone, cilEnvelopeClosed, cilBriefcase, cilScreenSmartphone } from '@coreui/icons'
+import { cilUser, cilPhone, cilEnvelopeClosed, cilBriefcase, cilScreenSmartphone, cilBuilding } from '@coreui/icons'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getActiveEmployees, getLeadById, updateLead } from '../../../utils/api'
 import { toast } from 'react-toastify'
 import CustomSpinner from '../../../components/custom/CustomSpinner'
-import { statusValues } from '../../../utils/helper'
+import { activityTypeValues, feedbackValues, stagesValues, statusValues } from '../../../utils/helper'
+import { fetchStagesValues } from '../../../utils/service'
 
 const EditLead = () => {
     const [loading, setLoading] = useState(false)
     const [fetching, setFetching] = useState(true)
     const [form, setForm] = useState({
-        lead_name: '',
+        account_name: '',
+        contact_name: '',
         phone_number: '',
-        status: 'New',
+        city: '',
+        stage: '',
+        status: '',
+        feedback: '',
+        activity_type: '',
+        account_size: '',
+        engagement_volume: '',
         assigned_owner_id: '',
         email: '',
         company_name: '',
@@ -67,9 +75,16 @@ const EditLead = () => {
                 if (res.data.success) {
                     const lead = res.data.data
                     setForm({
-                        lead_name: lead.lead_name || '',
+                        account_name: lead.account_name || '',
+                        contact_name: lead.contact_name || '',
                         phone_number: lead.phone_number || '',
-                        status: lead.status || 'New',
+                        status: lead.status || 'Cold',
+                        stage: lead.stage || 'Lead Identified',
+                        city: lead.city || '',
+                        feedback: lead.feedback || '',
+                        activity_type: lead.activity_type || '',
+                        account_size: lead.account_size || '',
+                        engagement_volume: lead.engagement_volume || '',
                         assigned_owner_id: lead.assigned_owner_id || '',
                         email: lead.email || '',
                         company_name: lead.company_name || '',
@@ -99,12 +114,14 @@ const EditLead = () => {
         const { name, value } = e.target;
         let newValue = value;
 
-        if (name === 'lead_name') {
+        if (name === 'account_name') {
             newValue = value.replace(/[^a-zA-Z\s]/g, '');
         }
 
         if (name === 'phone_number') {
-            newValue = value.replace(/\D/g, '');
+            // newValue = value.replace(/\D/g, '');
+
+            newValue = value.replace(/\D/g, '').slice(0, 10);
         }
 
         setForm(prev => ({
@@ -127,9 +144,10 @@ const EditLead = () => {
 
         // Front-end validation
         const newErrors = {}
-        if (!form.lead_name) newErrors.lead_name = 'Lead Name is required'
+        if (!form.account_name) newErrors.account_name = 'Account Name is required'
         if (!form.phone_number) newErrors.phone_number = 'Phone Number is required'
         if (!form.status) newErrors.status = 'Status is required'
+        if (!form.stage) newErrors.stage = 'Stage is required'
         if (!form.assigned_owner_id) newErrors.assigned_owner_id = 'Assigned Owner is required'
 
         setErrors(newErrors)
@@ -149,7 +167,7 @@ const EditLead = () => {
             const data = response.data
             if (data.success) {
                 toast.success(data.message || 'Lead updated successfully')
-                window.dispatchEvent(new Event('FOLLOWUP_UPDATED'));
+                window.dispatchEvent(new Event('FOLLOWUP_UPDATED'))
                 navigate('/employee/lead/list', { replace: true })
             } else if (response.status === 422 && response.data.errors) {
                 // Map backend errors to state
@@ -162,7 +180,7 @@ const EditLead = () => {
                 setErrors({ global: response?.data?.message || 'Something went wrong' })
             }
         } catch (err) {
-            toast.error(err.response?.data?.message || err.message || 'Something went wrong')
+            setErrors(err.response?.data?.message || err.message || 'Something went wrong')
         } finally {
             setLoading(false)
         }
@@ -193,17 +211,17 @@ const EditLead = () => {
                         <hr />
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Lead Name <span className='required-sign'>*</span></CFormLabel>
+                                <CFormLabel>Account Name <span className='required-sign'>*</span></CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>
                                         <CIcon icon={cilUser} />
                                     </CInputGroupText>
                                     <CFormInput
-                                        name="lead_name"
-                                        value={form.lead_name}
+                                        name="account_name"
+                                        value={form.account_name}
                                         onChange={handleChange}
-                                        invalid={!!errors.lead_name}
-                                        placeholder="Enter lead name"
+                                        invalid={!!errors.account_name}
+                                        placeholder="Enter account name"
                                     />
                                 </CInputGroup>
                                 <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.lead_name}</CFormFeedback>
@@ -225,23 +243,25 @@ const EditLead = () => {
                         </CRow>
 
                         <CRow className="mb-3">
+
                             <CCol md={6}>
-                                <CFormLabel>Email</CFormLabel>
+                                <CFormLabel>Primary Contact Name <span className='required-sign'>*</span></CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>
-                                        <CIcon icon={cilEnvelopeClosed} />
+                                        <CIcon icon={cilUser} />
                                     </CInputGroupText>
                                     <CFormInput
-                                        type="email"
-                                        name="email"
-                                        value={form.email}
+                                        name="contact_name"
+                                        value={form.contact_name}
                                         onChange={handleChange}
-                                        placeholder="Enter email"
-                                        invalid={!!errors.email}
+                                        invalid={!!errors.contact_name}
+                                        placeholder="Enter contact name"
                                     />
                                 </CInputGroup>
-                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.email}</CFormFeedback>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.contact_name}</CFormFeedback>
                             </CCol>
+
+
                             <CCol md={6}>
                                 <CFormLabel>Phone Number <span className='required-sign'>*</span></CFormLabel>
                                 <CInputGroup>
@@ -260,22 +280,60 @@ const EditLead = () => {
                             </CCol>
                         </CRow>
 
+                        <CRow className='mb-3'>
+
+                            <CCol md={6}>
+                                <CFormLabel>Email</CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>
+                                        <CIcon icon={cilEnvelopeClosed} />
+                                    </CInputGroupText>
+                                    <CFormInput
+                                        type="email"
+                                        name="email"
+                                        value={form.email}
+                                        onChange={handleChange}
+                                        placeholder="Enter email"
+                                        invalid={!!errors.email}
+                                    />
+                                </CInputGroup>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.email}</CFormFeedback>
+
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel>City <span className='required-sign'>*</span></CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>
+                                        <CIcon icon={cilBuilding} />
+                                    </CInputGroupText>
+                                    <CFormInput
+                                        name="city"
+                                        value={form.city}
+                                        onChange={handleChange}
+                                        invalid={!!errors.city}
+                                        placeholder="Enter city"
+                                    />
+                                </CInputGroup>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.city}</CFormFeedback>
+                            </CCol>
+                        </CRow>
                         {/* Lead Details Section */}
                         <h6 className="mb-3 text-primary mt-4">Lead Details</h6>
                         <hr />
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Status <span className='required-sign'>*</span></CFormLabel>
+                                <CFormLabel>Stage <span className='required-sign'>*</span></CFormLabel>
                                 <CFormSelect
-                                    name="status"
-                                    value={form.status}
+                                    name="stage"
+                                    value={form.stage}
                                     onChange={handleChange}
-                                    invalid={!!errors.status}
+                                    invalid={!!errors.stage}
                                     readOnly
                                     disabled
                                 >
                                     <option value="">Select Stages</option>
-                                    {statusValues.map((s) => (
+                                    {stagesValues.map((s) => (
                                         <option key={s.value} value={s.value}>{s.label}</option>
                                     ))}
                                 </CFormSelect>
@@ -298,15 +356,82 @@ const EditLead = () => {
 
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Expected Deal Value</CFormLabel>
+                                <CFormLabel>Status <span className='required-sign'>*</span></CFormLabel>
+                                <CFormSelect
+                                    name="status"
+                                    value={form.status}
+                                    onChange={handleChange}
+                                    invalid={!!errors.status}
+                                    readOnly
+                                    disabled
+                                >
+                                    <option value="">Select status</option>
+                                    {statusValues.map((s) => (
+                                        <option key={s.value} value={s.value}>{s.label}</option>
+                                    ))}
+                                </CFormSelect>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.status}</CFormFeedback>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Feedback</CFormLabel>
+                                <CFormSelect
+                                    name="feedback"
+                                    value={form.feedback}
+                                    onChange={handleChange}
+                                    invalid={!!errors.feedback}
+                                >
+                                    <option value="">Select Feedback</option>
+                                    {feedbackValues.map((f) => (
+                                        <option key={f.value} value={f.value}>{f.label}</option>
+                                    ))}
+                                </CFormSelect>
+                            </CCol>
+                        </CRow>
+
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Activity Type</CFormLabel>
+                                <CFormSelect
+                                    name="activity_type"
+                                    value={form.activity_type}
+                                    onChange={handleChange}
+                                    invalid={!!errors.activity_type}
+                                >
+                                    <option value="">Select Activity Type</option>
+                                    {activityTypeValues.map((a) => (
+                                        <option key={a.value} value={a.value}>{a.label}</option>
+                                    ))}
+                                </CFormSelect>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Account Size</CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>₹</CInputGroupText>
                                     <CFormInput
                                         type="number"
-                                        name="expected_deal_value"
-                                        value={form.expected_deal_value}
+                                        name="account_size"
+                                        min={0}
+                                        value={form.account_size}
                                         onChange={handleChange}
-                                        placeholder="Enter deal value"
+                                        placeholder="Enter Account Size"
+                                    />
+                                </CInputGroup>
+                            </CCol>
+                        </CRow>
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Engagement Volume</CFormLabel>
+                                <CInputGroup>
+                                    {/* <CInputGroupText>₹</CInputGroupText> */}
+                                    <CFormInput
+                                        type="number"
+                                        name="engagement_volume"
+                                        min={0}
+                                        value={form.engagement_volume}
+                                        onChange={handleChange}
+                                        placeholder="Enter Engagement Volume"
                                     />
                                 </CInputGroup>
                             </CCol>
@@ -322,6 +447,23 @@ const EditLead = () => {
                                     <option value="Medium">Medium</option>
                                     <option value="High">High</option>
                                 </CFormSelect>
+                            </CCol>
+                        </CRow>
+
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Expected Deal Value</CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>₹</CInputGroupText>
+                                    <CFormInput
+                                        type="number"
+                                        name="expected_deal_value"
+                                        value={form.expected_deal_value}
+                                        onChange={handleChange}
+                                        placeholder="Enter deal value"
+                                    />
+                                </CInputGroup>
                             </CCol>
                         </CRow>
 
@@ -342,15 +484,15 @@ const EditLead = () => {
                                         <option key={user.id} value={user.id}>{user.name}</option>
                                     ))}
                                 </CFormSelect>
-                                <CFormFeedback invalid>{errors.assigned_owner_id}</CFormFeedback>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.assigned_owner_id}</CFormFeedback>
                             </CCol>
                             <CCol md={6}>
                                 <CFormLabel>Next Follow-Up</CFormLabel>
                                 <CFormInput
                                     type="datetime-local"
                                     name="next_follow_up"
-                                    min={new Date().toISOString().slice(0,16)}
                                     value={form.next_follow_up}
+                                    min={new Date().toISOString().slice(0, 16)}
                                     onChange={handleChange}
                                     onClick={(e) => e.target.showPicker && e.target.showPicker()}
                                 />
@@ -377,7 +519,7 @@ const EditLead = () => {
                             <CButton
                                 className='buttonLabel-inverse'
                                 variant="outline"
-                                onClick={() => navigate('/owner/lead/list')}
+                                onClick={() => navigate('/employee/lead/list')}
                             >
                                 Cancel
                             </CButton>

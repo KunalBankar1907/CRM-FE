@@ -5,14 +5,14 @@ import { CCard, CCardBody, CButton, CBadge, CModal, CModalHeader, CModalTitle, C
 import CIcon from '@coreui/icons-react'
 import ListHeader from '../../../components/custom/ListHeader'
 import CustomSpinner from '../../../components/custom/CustomSpinner'
-import { capitalizeWord, formatDateDDMMYYYY, initDataTable, statusColorMap } from '../../../utils/helper'
+import { capitalizeWord, formatDateDDMMYYYY, formattedDate, initDataTable, stagesColorMap, stagesValues, statusColorMap, statusValues } from '../../../utils/helper'
 import { changeLeadStage, deleteLead, exportLeads, getActiveEmployees, getAllLeads, importLeads } from '../../../utils/api'
 import { cilPencil, cilTrash, cilOpentype, cilViewQuilt, cilCloudUpload, cilCloudDownload, cilXCircle, cilCheckCircle } from '@coreui/icons'
 import CustomDataTable from '../../../components/custom/CustomDatatable'
 import { fetchStagesValues } from '../../../utils/service'
 import { DEFAULT_LENGTH_CHANGE, DEFAULT_PAGE_LENGTH, DEFAULT_PAGING, DEFAULT_SEARCHING, PAGE_LENGTH_MENU } from '../../../utils/constant'
 
-// const statusColorMap = {
+// const stagesColorMap = {
 //     New: 'primary',
 //     Contacted: 'info',
 //     Qualified: 'warning',
@@ -27,13 +27,13 @@ const ListLead = () => {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [page, setPage] = useState(1)
+    const [stageFilter, setStageFilter] = useState('')
     const [statusFilter, setStatusFilter] = useState('')
     const [users, setUsers] = useState([])
     const [ownerFilter, setOwnerFilter] = useState('')
     const [sourceFilter, setSourceFilter] = useState('')
     const [priorityFilter, setPriorityFilter] = useState('')
     const [followUpFilter, setFollowUpFilter] = useState('')
-    const [stagesValues, setStagesValues] = useState([]);
     const [stageUpdating, setStageUpdating] = useState(false);
 
     const [fromDate, setFromDate] = useState('');
@@ -54,20 +54,12 @@ const ListLead = () => {
     const tableRef = useRef();
     const dataTableInstance = useRef(null);
 
-    useEffect(() => {
-        const getStages = async () => {
-            const values = await fetchStagesValues();
-            setStagesValues(values);
-        }
-        getStages();
-    }, []);
-
-
     const fetchLeads = async () => {
         setLoading(true)
         try {
             const response = await getAllLeads({
                 search: searchTerm,
+                stage: stageFilter,
                 status: statusFilter,
                 assigned_owner: ownerFilter,
                 lead_source: sourceFilter,
@@ -93,7 +85,7 @@ const ListLead = () => {
     useEffect(() => {
         const timeout = setTimeout(fetchLeads, 400)
         return () => clearTimeout(timeout)
-    }, [searchTerm, statusFilter, ownerFilter, sourceFilter, priorityFilter, followUpFilter, page, fromDate, toDate])
+    }, [searchTerm, stageFilter,statusFilter, ownerFilter, sourceFilter, priorityFilter, followUpFilter, page, fromDate, toDate])
 
     const currentUser = JSON.parse(localStorage.getItem('user'))
     const organization_id = currentUser?.organization_id;
@@ -113,8 +105,8 @@ const ListLead = () => {
     }, [organization_id])
 
     // Group leads by status for pipeline view
-    const leadsByStatus = stagesValues.reduce((acc, stage) => {
-        acc[stage.stage_name] = leads.filter((lead) => lead.status === stage.stage_name)
+    const leadsByStages = stagesValues.reduce((acc, stage) => {
+        acc[stage.value] = leads.filter((lead) => lead.stage === stage.value)
         return acc;
     }, {})
 
@@ -136,10 +128,10 @@ const ListLead = () => {
         // if (newStage === lead.status) return;
         setStageUpdating(true);
         try {
-            const res = await changeLeadStage(id, { status: newStage });
+            const res = await changeLeadStage(id, { stage: newStage });
 
             if (res.data.success) {
-                // setLeads(prev => ({ ...prev, status: newStage }));
+                // setLeads(prev => ({ ...prev, stage: newStage }));
 
                 fetchLeads();
 
@@ -192,6 +184,7 @@ const ListLead = () => {
             setExporting(true);
             const params = {
                 search: searchTerm || '',
+                stage: stageFilter || '',
                 status: statusFilter || '',
                 assigned_owner: ownerFilter || '',
                 lead_source: sourceFilter || '',
@@ -296,7 +289,7 @@ const ListLead = () => {
                                             {/* Export <CIcon icon={cilCloudDownload} /> */}
                                             {exporting ? (
                                                 <>
-                                                    <CSpinner size="sm" className="me-2" />
+                                                    Export <CSpinner size="sm" className="me-2" />
                                                 </>
                                             ) : (
                                                 <>
@@ -322,6 +315,20 @@ const ListLead = () => {
                                 }}
                                 filterComponents={[
                                     <select
+                                        key="stage"
+                                        className="form-select"
+                                        value={stageFilter}
+                                        onChange={(e) => {
+                                            setStageFilter(e.target.value)
+                                            setPage(1)
+                                        }}
+                                    >
+                                        <option value="">All Stages</option>
+                                        {stagesValues.map((s) => (
+                                            <option key={s.value} value={s.value}>{s.label}</option>
+                                        ))}
+                                    </select>,
+                                    <select
                                         key="status"
                                         className="form-select"
                                         value={statusFilter}
@@ -330,9 +337,9 @@ const ListLead = () => {
                                             setPage(1)
                                         }}
                                     >
-                                        <option value="">All Stages</option>
-                                        {stagesValues.map((s) => (
-                                            <option key={s.stage_name} value={s.stage_name}>{s.stage_name}</option>
+                                        <option value="">All Status</option>
+                                        {statusValues.map((s) => (
+                                            <option key={s.value} value={s.value}>{s.label}</option>
                                         ))}
                                     </select>,
                                     <select
@@ -487,13 +494,15 @@ const ListLead = () => {
                                     <thead className="table-primary">
                                         <tr>
                                             <th>#</th>
-                                            <th>Lead Name</th>
-                                            <th>Phone</th>
+                                            <th>Account Name</th>
+                                            <th>Contact</th>
                                             <th>Email</th>
                                             <th>Company</th>
+                                            <th>City</th>
                                             <th>Stage</th>
-                                            <th>Assigned To</th>
-                                            <th>Priority</th>
+                                            <th>Status</th>
+                                            <th>Converted</th>
+                                            <th>Last Activity Date</th>
                                             <th>Next Follow-Up</th>
                                             <th style={{ textAlign: 'center' }}>Action</th>
                                         </tr>
@@ -504,10 +513,32 @@ const ListLead = () => {
                                                 <tr key={lead.id}>
                                                     {/* <td>{lead.id}</td> */}
                                                     <td>{i + 1}</td>
-                                                    <td onClick={() => navigate(`/owner/lead/view/${lead.id}`)} style={{ cursor: "pointer" }}><span style={{ fontWeight: "700" }}>{lead.lead_name}</span></td>
-                                                    <td>{lead.phone_number}</td>
+                                                    <td onClick={() => navigate(`/owner/lead/view/${lead.id}`)} style={{ cursor: "pointer" }}><span style={{ fontWeight: "600" }}>{lead.account_name}</span></td>
+                                                    {/* <td>{lead.phone_number}</td> */}
+                                                    <td>
+                                                        <div style={{ fontSize: "1rem" }}>{lead.contact_name}</div>
+                                                        <div className='text-muted' style={{ fontSize: "0.75rem" }}>
+                                                            {lead.phone_number}
+                                                        </div>
+                                                    </td>
                                                     <td>{lead.email}</td>
                                                     <td>{lead.company_name}</td>
+                                                    <td>{lead.city}</td>
+                                                    <td>
+                                                        <CBadge
+                                                            className="py-1 px-2 text-white"
+                                                            style={{
+                                                                backgroundColor: stagesColorMap[lead.stage] || '#6c757d',
+                                                                fontSize: '0.875rem',
+                                                                minHeight: '32px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            {capitalizeWord(lead.stage)}
+                                                        </CBadge>
+                                                    </td>
                                                     <td>
                                                         <CBadge
                                                             className="py-1 px-2 text-white"
@@ -522,10 +553,10 @@ const ListLead = () => {
                                                         >
                                                             {capitalizeWord(lead.status)}
                                                         </CBadge>
-
                                                     </td>
-                                                    <td>{lead?.assigned_owner?.name || '-'}</td>
-                                                    <td>{lead.priority}</td>
+                                                    <td>{capitalizeWord(lead?.converted || '-')}</td>
+                                                    {/* <td>{lead?.assigned_owner?.name || '-'}</td> */}
+                                                    <td>{formattedDate(lead.last_activity_date)}</td>
                                                     <td>{formatDateDDMMYYYY(lead.next_follow_up)}</td>
                                                     <td>
                                                         <div className="table-actions d-flex gap-2 justify-content-center">
@@ -559,7 +590,7 @@ const ListLead = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="10" className="text-center text-muted py-4">
+                                                <td colSpan="12" className="text-center text-muted py-4">
                                                     No leads found
                                                 </td>
                                             </tr>
@@ -594,18 +625,18 @@ const ListLead = () => {
                                                     borderBottom: '1px solid #ddd',
                                                     fontWeight: '600',
                                                     fontSize: '1rem',
-                                                    color: `${statusColorMap[stage.stage_name]}`,
+                                                    color: `${stagesColorMap[stage.value]}`,
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
                                                 }}
                                             >
-                                                <span>{stage.stage_name}</span>
+                                                <span>{stage.label}</span>
                                                 <CBadge style={{
                                                     color: 'var(--lightColor)',
-                                                    backgroundColor: `${statusColorMap[stage.stage_name]}`
+                                                    backgroundColor: `${stagesColorMap[stage.value]}`
                                                 }}>
-                                                    {leadsByStatus[stage.stage_name]?.length || 0}
+                                                    {leadsByStages[stage.value]?.length || 0}
                                                 </CBadge>
                                             </div>
                                             <div
@@ -616,8 +647,8 @@ const ListLead = () => {
                                                     minHeight: '200px',
                                                 }}
                                             >
-                                                {leadsByStatus[stage.stage_name]?.length ? (
-                                                    leadsByStatus[stage.stage_name].map((lead) => (
+                                                {leadsByStages[stage.value]?.length ? (
+                                                    leadsByStages[stage.value].map((lead) => (
                                                         <div
                                                             key={lead.id}
                                                             className="shadow rounded p-3 mb-3"
@@ -627,15 +658,16 @@ const ListLead = () => {
                                                                 border: '1px solid #0000004b',
                                                             }}
                                                             onClick={() => navigate(`/owner/lead/view/${lead.id}`)}
-                                                            title={`View Lead: ${lead.lead_name}`}
+                                                            title={`View Lead: ${lead.account_name}`}
                                                         >
                                                             <div className="d-flex justify-content-between align-items-center mb-2">
-                                                                <strong>{lead.lead_name}</strong>
+                                                                <strong>{lead.account_name}</strong>
                                                             </div>
                                                             <div style={{ fontSize: '0.85rem', color: '#555' }}>
-                                                                <div>{lead.company_name || '-'}</div>
-                                                                <div>Owner: {lead?.assigned_owner?.name || '-'}</div>
-                                                                <div>Priority: {lead.priority || '-'}</div>
+                                                                {lead.company_name && <div>{lead.company_name || '-'}</div>}
+                                                                {lead.assigned_owner && <div>Owner: {lead?.assigned_owner?.name || '-'}</div>}
+                                                                {lead.status && <div>Status: {lead.status || '-'}</div>}
+                                                                {lead.priority && <div>Priority: {lead.priority || '-'}</div>}
                                                                 {lead.next_follow_up &&
                                                                     <div>Next Follow-Up: {formatDateDDMMYYYY(lead.next_follow_up) || '-'}</div>
                                                                 }
@@ -655,7 +687,7 @@ const ListLead = () => {
                                                                 <CButton
                                                                     size="sm"
                                                                     className='action-btn delete'
-                                                                    title={`Delete Lead: ${lead.lead_name}`}
+                                                                    title={`Delete Lead: ${lead.account_name}`}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation()
                                                                         handleDeleteLead(lead.id)
@@ -670,7 +702,7 @@ const ListLead = () => {
                                                                 <select
                                                                     style={{ marginLeft: '1rem' }}
                                                                     className="form-select form-select-sm"
-                                                                    value={lead.status}
+                                                                    value={lead.stage}
                                                                     onClick={(e) => e.stopPropagation()}
                                                                     onChange={(e) => {
                                                                         e.stopPropagation()
@@ -678,8 +710,8 @@ const ListLead = () => {
                                                                     }}
                                                                 >
                                                                     {stagesValues.map((stage) => (
-                                                                        <option key={stage.id} value={stage.stage_name}>
-                                                                            {stage.stage_name}
+                                                                        <option key={stage.value} value={stage.value}>
+                                                                            {stage.label}
                                                                         </option>
                                                                     ))}
                                                                 </select>
@@ -713,7 +745,7 @@ const ListLead = () => {
                     {/* Download sample CSV */}
                     <div className="mb-3">
                         <a
-                            href='/sample_leads_template.csv'
+                            href='/sample.csv'
                             download
                             className="btn btn-sm btn-outline-primary"
                         >

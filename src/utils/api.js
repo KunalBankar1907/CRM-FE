@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// const API_BASE_URL = 'http://localhost:8000/api';
-const API_BASE_URL = 'https://campuskul.org/api';
+const API_BASE_URL = 'http://localhost:8000/api';
+// const API_BASE_URL = 'https://backend.onego.in/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -81,6 +81,7 @@ export const deleteEmployee = (id) => {
 
 export const getAllLeads = ({
     search = '',
+    stage = '',
     status = '',
     assigned_owner = '',
     lead_source = '',
@@ -94,6 +95,7 @@ export const getAllLeads = ({
     return api.get('/admin/lead/get-all-leads', {
         params: {
             search,
+            stage,
             status,
             assigned_owner,
             lead_source,
@@ -109,6 +111,7 @@ export const getAllLeads = ({
 
 export const getAllAssignedLeads = ({
     search = '',
+    stage = '',
     status = '',
     lead_source = '',
     priority = '',
@@ -119,6 +122,7 @@ export const getAllAssignedLeads = ({
     return api.get('/lead/employee/get-assigned-leads', {
         params: {
             search,
+            stage,
             status,
             lead_source,
             priority,
@@ -202,6 +206,20 @@ export const getAllActiveStages = () => {
 
 export const changeLeadStage = (id, payload) => {
     return api.post(`/lead/change-stage/${id}`, payload);
+}
+
+export const changeLeadFeedback = (id, payload) => {
+    return api.post(`/lead/change-feedback/${id}`, payload);
+}
+export const changeLeadOpportunity = (id, payload) => {
+    return api.post(`/lead/change-opportunity/${id}`, payload);
+}
+
+export const changeLeadConverted = (id, payload) => {
+    return api.post(`/lead/change-converted/${id}`, payload);
+}
+export const changeLeadStatus = (id, payload) => {
+    return api.post(`/lead/change-status/${id}`, payload);
 }
 
 export const getAllFollowups = ({ search = '', status = '', page = 1, perPage = 10, followUpFilter = '' } = {}) => {

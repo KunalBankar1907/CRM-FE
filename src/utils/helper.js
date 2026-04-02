@@ -2,29 +2,61 @@ import { cilArrowThickFromRight, cilArrowThickRight } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
 export const ROLE = "";
-// export const BASE_URL = 'http://localhost:8000/api'
-// export const IMAGE_BASE_URL = 'http://localhost:8000'
-export const BASE_URL = 'https://campuskul.org/api'
-export const IMAGE_BASE_URL = 'https://campuskul.org'
+export const BASE_URL = 'http://localhost:8000/api'
+export const IMAGE_BASE_URL = 'http://localhost:8000'
+// export const BASE_URL = 'https://backend.onego.in/api'
+// export const IMAGE_BASE_URL = 'https://backend.onego.in'
 
-export const statusValues = [
-  //   { value: '', label: 'Select Status' },
-  { value: 'New', label: 'New' },
+export const stagesValues = [
+  //   { value: '', label: 'Select Stage' },
+  { value: 'Lead Identified', label: 'Lead Identified' },
   { value: 'Contacted', label: 'Contacted' },
-  { value: 'Qualified', label: 'Qualified' },
-  { value: 'Lost', label: 'Lost' },
-  { value: 'Won', label: 'Won' }
+  { value: 'Meeting Scheduled', label: 'Meeting Scheduled' },
+  { value: 'Discussion Done', label: 'Discussion Done' },
+  { value: 'Proposal Planned', label: 'Proposal Planned' },
+  { value: 'Proposal Shared', label: 'Proposal Shared' },
+  { value: 'Engagement Started', label: 'Engagement Started' },
+  { value: 'Converted', label: 'Converted' },
 ];
 
-export const statusColorMap = {
-  New: '#0d6efd',
-  Contacted: '#0dcaf0',
-  Qualified: '#ffc107',
-  'Proposal Sent': '#6c757d',
-  Negotiation: '#343a40',
-  'Closed Won': '#198754',
-  'Closed Lost': '#dc3545',
+export const stagesColorMap = {
+  'Lead Identified': '#0b5ed7',
+  Contacted: '#3dd5f3',
+  'Meeting Scheduled': '#ffca2c',
+  'Discussion Done': '#495057',
+  'Proposal Planned': '#ff8c00',
+  'Proposal Shared': '#ff6f61',
+  'Engagement Started': '#212529',
+  'Converted': '#157347',
 };
+
+export const statusValues = [
+  { value: 'Cold', label: 'Cold' },
+  { value: 'Warm', label: 'Warm' },
+  { value: 'Active', label: 'Active' },
+  { value: 'Converted', label: 'Converted' },
+];
+export const statusColorMap = {
+  Cold: '#6c757d',
+  Warm: '#e83e8c',
+  Active: '#20c997',
+  Converted: '#fd7e14',
+};
+
+export const feedbackValues = [
+  { value: 'Positive', label: 'Positive' },
+  { value: 'Neutral', label: 'Neutral' },
+  { value: 'Negative', label: 'Negative' },
+];
+export const activityTypeValues = [
+  { value: 'Call', label: 'Call' },
+  { value: 'Meeting', label: 'Meeting' },
+  { value: 'Demo', label: 'Demo' },
+  { value: 'Workshop', label: 'Workshop' },
+  { value: 'Follow-up', label: 'Follow-up' },
+  { value: 'Presentation', label: 'Presentation' },
+  { value: 'Other', label: 'Other' },
+];
 
 export const followupStatusColorMap = {
   Upcoming: '#0d6efd',
@@ -50,11 +82,14 @@ export const fieldLabelMap = {
   note: 'Note',
   assigned_owner_id: 'Assigned Owner',
   lead_name: 'Lead Name',
+  account_name: 'Account Name',
+  contact_name: 'Contact Name',
   phone_number: 'Phone Number',
   email: 'Email',
   company_name: 'Company Name',
   lead_source: 'Lead Source',
   status: 'Status',
+  stage: 'Stage',
   organization_id: 'Organization',
 };
 
@@ -97,9 +132,26 @@ export const renderChangedFields = (meta) => {
       return (
         <p key={key} className="mb-1">
           <strong>{label}:</strong>{' '}
-          <span className="text-success">{value.old}</span> <CIcon icon={cilArrowThickRight} />{' '}
-          <span className="text-danger">{value.new}</span>
+
+          <span className="text-success">
+            {value.old
+              ? key === 'next_follow_up'
+                ? formatDateDDMMYYYY(value.old)
+                : value.old
+              : ''}
+          </span>
+
+          {value.old && <CIcon icon={cilArrowThickRight} />}{' '}
+
+          <span className="text-danger">
+            {value.new
+              ? key === 'next_follow_up'
+                ? formatDateDDMMYYYY(value.new)
+                : value.new
+              : ''}
+          </span>
         </p>
+
       );
     }
 
@@ -167,6 +219,11 @@ export const formatDateDDMMYYYY = (dateString) => {
   return `${day}-${month}-${year}`;
 };
 
+export const formattedDate = (dateString) => {
+  return new Date(dateString)
+    .toLocaleDateString('en-GB')
+    .replace(/\//g, '-');
+};
 
 /**
  * Initialize a table as a DataTable.

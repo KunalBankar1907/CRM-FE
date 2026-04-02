@@ -62,12 +62,12 @@ const adminNav = [
         to: '/owner/lead/list',
         icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
     },
-    {
-        component: CNavItem,
-        name: 'Pipeline Stage',
-        to: '/owner/stage/list',
-        icon: <CIcon icon={cilTransfer} customClassName="nav-icon" />,
-    },
+    // {
+    //     component: CNavItem,
+    //     name: 'Pipeline Stage',
+    //     to: '/owner/stage/list',
+    //     icon: <CIcon icon={cilTransfer} customClassName="nav-icon" />,
+    // },
     {
         component: CNavItem,
         name: 'Follow-up Management',

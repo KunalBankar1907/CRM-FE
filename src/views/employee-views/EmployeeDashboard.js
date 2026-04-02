@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { getEmployeeDashboard } from "../../utils/api"
 import CustomSpinner from "../../components/custom/CustomSpinner"
-import { statusColorMap } from "../../utils/helper"
+import { stagesColorMap, stagesValues } from "../../utils/helper"
 
 const EmployeeDashboard = () => {
     const [dashboardData, setDashboardData] = useState([]);
@@ -40,15 +40,15 @@ const EmployeeDashboard = () => {
         my_total_leads = 0,
         followups = { overdue: 0, today: 0, upcoming: 0 },
         closed = { won: 0, lost: 0 },
-        stages = [],
         leads_by_stage = [],
     } = dashboardData;
 
     const hasClosedData = closed.won_count > 0 || closed.lost_count > 0;
+    const stages = stagesValues;
     const normalizedLeadsByStage = stages.map((stage) => {
-        const found = leads_by_stage.find((l) => l.status === stage.stage_name)
+        const found = leads_by_stage.find((l) => l.stage === stage.value)
         return {
-            status: stage.stage_name,
+            stage: stage.value,
             total: found ? found.total : 0,
         }
     });
@@ -122,12 +122,12 @@ const EmployeeDashboard = () => {
                         <CCardBody style={{ height: "15rem" }}>
                             <CChartBar
                                 data={{
-                                    labels: normalizedLeadsByStage.map((i) => i.status),
+                                    labels: normalizedLeadsByStage.map((i) => i.stage),
                                     datasets: [
                                         {
                                             data: normalizedLeadsByStage.map((i) => i.total),
                                             backgroundColor: normalizedLeadsByStage.map(
-                                                (i) => statusColorMap[i.status] || "#6c757d"
+                                                (i) => stagesColorMap[i.stage] || "#6c757d"
                                             ),
                                         },
                                     ],

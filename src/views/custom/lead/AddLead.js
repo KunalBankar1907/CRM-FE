@@ -18,19 +18,26 @@ import {
     CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilUser, cilPhone, cilEnvelopeClosed, cilBriefcase, cilScreenSmartphone } from '@coreui/icons'
+import { cilUser, cilPhone, cilEnvelopeClosed, cilBriefcase, cilScreenSmartphone, cilBuilding } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
 import { addLead, getActiveEmployees } from '../../../utils/api'
 import { toast } from 'react-toastify'
-import { fetchStagesValues } from '../../../utils/service'
+import { activityTypeValues, feedbackValues, stagesValues, statusValues } from '../../../utils/helper'
 // import { addLead, getUsers } from '../../../utils/api'
 
 const AddLead = () => {
     const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({
-        lead_name: '',
+        account_name: '',
+        contact_name: '',
         phone_number: '',
+        city: '',
+        stage: '',
         status: '',
+        feedback: '',
+        activity_type: '',
+        account_size: '',
+        engagement_volume: '',
         assigned_owner_id: '',
         email: '',
         company_name: '',
@@ -42,19 +49,11 @@ const AddLead = () => {
     })
     const [errors, setErrors] = useState({})
     const [users, setUsers] = useState([])
-    const [stagesValues, setStagesValues] = useState([])
     const navigate = useNavigate()
 
     const currentUser = JSON.parse(localStorage.getItem('user'))
     const organization_id = currentUser?.organization_id
 
-    useEffect(() => {
-        const getStages = async () => {
-            const values = await fetchStagesValues();
-            setStagesValues(values);
-        }
-        getStages();
-    }, []);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -74,7 +73,7 @@ const AddLead = () => {
         const { name, value } = e.target;
         let newValue = value;
 
-        if (name === 'lead_name') {
+        if (name === 'account_name') {
             newValue = value.replace(/[^a-zA-Z\s]/g, '');
         }
 
@@ -104,7 +103,7 @@ const AddLead = () => {
 
         // Basic front-end validation
         const newErrors = {}
-        if (!form.lead_name) newErrors.lead_name = 'Lead Name is required'
+        if (!form.account_name) newErrors.account_name = 'Account Name is required'
         if (!form.phone_number) newErrors.phone_number = 'Phone Number is required'
         if (!form.status) newErrors.status = 'Status is required'
         if (!form.assigned_owner_id) newErrors.assigned_owner_id = 'Assigned Owner is required'
@@ -122,7 +121,6 @@ const AddLead = () => {
             next_follow_up: form.next_follow_up || null,
         }
 
-
         try {
             const response = await addLead(payload);
             const data = response.data
@@ -130,9 +128,16 @@ const AddLead = () => {
                 toast.success(data.message || 'Lead created successfully');
                 window.dispatchEvent(new Event('FOLLOWUP_UPDATED'));
                 setForm({
-                    lead_name: '',
+                    account_name: '',
+                    contact_name: '',
                     phone_number: '',
-                    status: 'New',
+                    city: '',
+                    stage: 'Lead Identified',
+                    status: 'Cold',
+                    feedback: 'Neutral',
+                    activity_type: '',
+                    account_size: '',
+                    engagement_volume: '',
                     assigned_owner_id: '',
                     email: '',
                     company_name: '',
@@ -189,20 +194,20 @@ const AddLead = () => {
                         {/* Lead Name */}
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Lead Name <span className='required-sign'>*</span></CFormLabel>
+                                <CFormLabel>Account Name <span className='required-sign'>*</span></CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>
                                         <CIcon icon={cilUser} />
                                     </CInputGroupText>
                                     <CFormInput
-                                        name="lead_name"
-                                        value={form.lead_name}
+                                        name="account_name"
+                                        value={form.account_name}
                                         onChange={handleChange}
-                                        invalid={!!errors.lead_name}
-                                        placeholder="Enter lead name"
+                                        invalid={!!errors.account_name}
+                                        placeholder="Enter account name"
                                     />
                                 </CInputGroup>
-                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.lead_name}</CFormFeedback>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.account_name}</CFormFeedback>
                             </CCol>
 
                             {/* Company Name */}
@@ -219,6 +224,45 @@ const AddLead = () => {
                                         placeholder="Enter company name"
                                     />
                                 </CInputGroup>
+                            </CCol>
+                        </CRow>
+
+                        {/* Primary Contact Name */}
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Primary Contact Name <span className='required-sign'>*</span></CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>
+                                        <CIcon icon={cilUser} />
+                                    </CInputGroupText>
+                                    <CFormInput
+                                        name="contact_name"
+                                        value={form.contact_name}
+                                        onChange={handleChange}
+                                        invalid={!!errors.contact_name}
+                                        placeholder="Enter contact name"
+                                    />
+                                </CInputGroup>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.contact_name}</CFormFeedback>
+                            </CCol>
+
+                            {/* Phone Number */}
+                            <CCol md={6}>
+                                <CFormLabel>Phone Number <span className='required-sign'>*</span></CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>
+                                        <CIcon icon={cilScreenSmartphone} />
+                                    </CInputGroupText>
+                                    <CFormInput
+                                        name="phone_number"
+                                        value={form.phone_number}
+                                        onChange={handleChange}
+                                        invalid={!!errors.phone_number}
+                                        placeholder="Enter phone number"
+                                    />
+                                </CInputGroup>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.phone_number}</CFormFeedback>
+
                             </CCol>
                         </CRow>
 
@@ -242,23 +286,21 @@ const AddLead = () => {
                                 <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.email}</CFormFeedback>
                             </CCol>
 
-                            {/* Company Name */}
                             <CCol md={6}>
-                                <CFormLabel>Phone Number <span className='required-sign'>*</span></CFormLabel>
+                                <CFormLabel>City <span className='required-sign'>*</span></CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>
-                                        <CIcon icon={cilScreenSmartphone} />
+                                        <CIcon icon={cilBuilding} />
                                     </CInputGroupText>
                                     <CFormInput
-                                        name="phone_number"
-                                        value={form.phone_number}
+                                        name="city"
+                                        value={form.city}
                                         onChange={handleChange}
-                                        invalid={!!errors.phone_number}
-                                        placeholder="Enter phone number"
+                                        invalid={!!errors.city}
+                                        placeholder="Enter city"
                                     />
                                 </CInputGroup>
-                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.phone_number}</CFormFeedback>
-
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }}>{errors.city}</CFormFeedback>
                             </CCol>
                         </CRow>
 
@@ -268,16 +310,16 @@ const AddLead = () => {
 
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Status <span className='required-sign'>*</span></CFormLabel>
+                                <CFormLabel>Stage <span className='required-sign'>*</span></CFormLabel>
                                 <CFormSelect
-                                    name="status"
-                                    value={form.status}
+                                    name="stage"
+                                    value={form.stage}
                                     onChange={handleChange}
-                                    invalid={!!errors.status}
+                                    invalid={!!errors.stage}
                                 >
-                                    <option value="">Select Stages</option>
+                                    <option value="">Select Stage</option>
                                     {stagesValues.map((s) => (
-                                        <option key={s.stage_name} value={s.stage_name}>{s.stage_name}</option>
+                                        <option key={s.value} value={s.value}>{s.label}</option>
                                     ))}
                                 </CFormSelect>
                                 <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.status}</CFormFeedback>
@@ -301,18 +343,81 @@ const AddLead = () => {
 
                         <CRow className="mb-3">
                             <CCol md={6}>
-                                <CFormLabel>Expected Deal Value</CFormLabel>
+                                <CFormLabel>Status <span className='required-sign'>*</span></CFormLabel>
+                                <CFormSelect
+                                    name="status"
+                                    value={form.status}
+                                    onChange={handleChange}
+                                    invalid={!!errors.status}
+                                >
+                                    <option value="">Select status</option>
+                                    {statusValues.map((s) => (
+                                        <option key={s.value} value={s.value}>{s.label}</option>
+                                    ))}
+                                </CFormSelect>
+                                <CFormFeedback className="text-danger" style={{ fontSize: "0.8rem" }} >{errors.status}</CFormFeedback>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Feedback</CFormLabel>
+                                <CFormSelect
+                                    name="feedback"
+                                    value={form.feedback}
+                                    onChange={handleChange}
+                                    invalid={!!errors.feedback}
+                                >
+                                    <option value="">Select Feedback</option>
+                                    {feedbackValues.map((f) => (
+                                        <option key={f.value} value={f.value}>{f.label}</option>
+                                    ))}
+                                </CFormSelect>
+                            </CCol>
+                        </CRow>
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Activity Type</CFormLabel>
+                                <CFormSelect
+                                    name="activity_type"
+                                    value={form.activity_type}
+                                    onChange={handleChange}
+                                    invalid={!!errors.activity_type}
+                                >
+                                    <option value="">Select Activity Type</option>
+                                    {activityTypeValues.map((a) => (
+                                        <option key={a.value} value={a.value}>{a.label}</option>
+                                    ))}
+                                </CFormSelect>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Account Size</CFormLabel>
                                 <CInputGroup>
                                     <CInputGroupText>₹</CInputGroupText>
                                     <CFormInput
                                         type="number"
-                                        name="expected_deal_value"
-                                        value={form.expected_deal_value}
+                                        name="account_size"
+                                        min={0}
+                                        value={form.account_size}
                                         onChange={handleChange}
-                                        placeholder="Enter deal value"
+                                        placeholder="Enter Account Size"
                                     />
                                 </CInputGroup>
-                                <small className="text-muted">Approximate value in INR</small>
+                            </CCol>
+                        </CRow>
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Engagement Volume</CFormLabel>
+                                <CInputGroup>
+                                    {/* <CInputGroupText>₹</CInputGroupText> */}
+                                    <CFormInput
+                                        type="number"
+                                        name="engagement_volume"
+                                        min={0}
+                                        value={form.engagement_volume}
+                                        onChange={handleChange}
+                                        placeholder="Enter Engagement Volume"
+                                    />
+                                </CInputGroup>
                             </CCol>
                             <CCol md={6}>
                                 <CFormLabel>Priority</CFormLabel>
@@ -326,6 +431,24 @@ const AddLead = () => {
                                     <option value="Medium">Medium</option>
                                     <option value="High">High</option>
                                 </CFormSelect>
+                            </CCol>
+                        </CRow>
+
+                        <CRow className="mb-3">
+                            <CCol md={6}>
+                                <CFormLabel>Expected Deal Value</CFormLabel>
+                                <CInputGroup>
+                                    <CInputGroupText>₹</CInputGroupText>
+                                    <CFormInput
+                                        type="number"
+                                        name="expected_deal_value"
+                                        min={0}
+                                        value={form.expected_deal_value}
+                                        onChange={handleChange}
+                                        placeholder="Enter deal value"
+                                    />
+                                </CInputGroup>
+                                <small className="text-muted">Approximate value in INR</small>
                             </CCol>
                         </CRow>
 
@@ -357,7 +480,7 @@ const AddLead = () => {
                                     name="next_follow_up"
                                     value={form.next_follow_up}
                                     onChange={handleChange}
-                                    min={new Date().toISOString().slice(0,16)}
+                                    min={new Date().toISOString().slice(0, 16)}
                                     onClick={(e) => {
                                         if (e.target.showPicker) {
                                             e.target.showPicker();

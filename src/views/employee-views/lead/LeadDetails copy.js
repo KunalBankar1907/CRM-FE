@@ -16,7 +16,7 @@ import { toast } from 'react-toastify'
 import { formatDateDDMMYYYY, statusValues } from '../../../utils/helper'
 
 
-const statusColorMap = {
+const stagesColorMap = {
     New: 'primary',
     Contacted: 'info',
     Qualified: 'warning',
@@ -109,7 +109,7 @@ const LeadDetails = () => {
 
                     <div className="d-flex align-items-center gap-2">
                         <CBadge
-                            color={statusColorMap[lead.status]}
+                            color={stagesColorMap[lead.status]}
                             className="py-1 px-3"
                             style={{ fontSize: '0.875rem', minHeight: '32px', display: 'flex', alignItems: 'center' }}
                         >

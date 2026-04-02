@@ -6,7 +6,7 @@ import { getAdminDashboard } from "../../../utils/api"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import CustomSpinner from "../../../components/custom/CustomSpinner"
-import { statusColorMap } from "../../../utils/helper"
+import { stagesColorMap, stagesValues } from "../../../utils/helper"
 
 const Dashboard = () => {
     const [dashboardData, setDashboardData] = useState([]);
@@ -39,7 +39,6 @@ const Dashboard = () => {
     const {
         total_leads = 0,
         leads_by_stage = [],
-        stages = [],
         leads_this_week = 0,
         leads_this_month = 0,
         followups = { overdue: 0, today: 0, upcoming: 0 },
@@ -47,6 +46,7 @@ const Dashboard = () => {
         metrics = {},
     } = dashboardData;
 
+    const stages = stagesValues;
     const sortedLeadsByStage = [...leads_by_stage].sort(
         (a, b) =>
             stages.indexOf(a.status) - stages.indexOf(b.status)
@@ -55,9 +55,9 @@ const Dashboard = () => {
     const hasClosedData = closed.won_count > 0 || closed.lost_count > 0;
 
     const normalizedLeadsByStage = stages.map((stage) => {
-        const found = leads_by_stage.find((l) => l.status === stage.stage_name)
+        const found = leads_by_stage.find((l) => l.stage === stage.value)
         return {
-            status: stage.stage_name,
+            stage: stage.value,
             total: found ? found.total : 0,
         }
     });
@@ -141,7 +141,7 @@ const Dashboard = () => {
                                         {
                                             data: normalizedLeadsByStage.map((i) => i.total),
                                             backgroundColor: normalizedLeadsByStage.map(
-                                                (i) => statusColorMap[i.status] || "#6c757d"
+                                                (i) => stagesColorMap[i.status] || "#6c757d"
                                             ),
                                         },
                                     ],
@@ -175,12 +175,12 @@ const Dashboard = () => {
                         <CCardBody style={{ height: "15rem", padding: "1rem", }}>
                             <CChartBar
                                 data={{
-                                    labels: normalizedLeadsByStage.map((i) => i.status),
+                                    labels: normalizedLeadsByStage.map((i) => i.stage),
                                     datasets: [
                                         {
                                             data: normalizedLeadsByStage.map((i) => i.total),
                                             backgroundColor: normalizedLeadsByStage.map(
-                                                (i) => statusColorMap[i.status] || "#6c757d"
+                                                (i) => stagesColorMap[i.stage] || "#6c757d"
                                             ),
                                         },
                                     ],

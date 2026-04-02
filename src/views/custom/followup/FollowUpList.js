@@ -213,7 +213,7 @@ const AddModal = ({ visible, onClose, onSuccess }) => {
                             <option value="">Select Lead</option>
                             {leads.map((lead) => (
                                 <option key={lead.id} value={lead.id}>
-                                    {lead.lead_name}
+                                    {lead.account_name}
                                 </option>
                             ))}
                         </CFormSelect>
@@ -797,7 +797,7 @@ const FollowUpList = () => {
                                     <thead className="table-primary">
                                         <tr>
                                             <th>#</th>
-                                            <th>Lead Name</th>
+                                            <th>Account Name</th>
                                             <th>Follow-up At</th>
                                             <th>Status</th>
                                             {/* <th>Outcome</th> */}
@@ -810,7 +810,7 @@ const FollowUpList = () => {
                                                 <tr key={f.id}>
                                                     {/* <td>{f.id}</td> */}
                                                     <td>{i + 1}</td>
-                                                    <td>{f.lead?.lead_name ?? '-'}</td>
+                                                    <td>{f.lead?.account_name ?? '-'}</td>
                                                     <td>{formatDateDDMMYYYY(f.follow_up_at)}</td>
                                                     {/* <td>{f.status}</td> */}
                                                     <td>

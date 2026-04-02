@@ -119,7 +119,10 @@ const AppHeader = () => {
                 <CBadge
                   size='sm'
                   color="danger"
-                  className="position-absolute top-0 start-100 translate-middle rounded-pill"
+                  className="position-absolute top-5 start-80 translate-middle rounded-pill"
+                  style={{
+                    fontSize:'0.60rem'
+                  }}
                 >
                   {counts.overdue + counts.today + counts.upcoming}
                 </CBadge>
